@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reception Check-In</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-image: url('b.jpg');
+      background-size: cover;
+      font-family: 'Arial', sans-serif;
+    }
+
+    #container {
+      width: 60%;
+      margin: 50px auto;
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    #guestImage {
+      max-width: 100%;
+      height: auto;
+      border-radius: 50%;
+      margin-bottom: 20px;
+    }
+
+    #conversation {
+      margin: 20px 0;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      height: 200px;
+      overflow-y: scroll;
+    }
+
+    #userInput {
+      margin-top: 10px;
+    }
+
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .receptionist-message {
+      background-color: #f0f0f0;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+
+    .user-message {
+      background-color: #c9e5ff;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="container">
+    <img id="guestImage" src="a.jpg" alt="Receptionist Image">
+    <div id="conversation"></div>
+    <div id="userInput">
+      <input type="text" id="userResponse" placeholder="Type your response...">
+      <button onclick="processUserInput()">Submit</button>
+    </div>
+  </div>
+
+  <script>
+    const conversationContainer = document.getElementById('conversation');
+    const userInput = document.getElementById('userResponse');
+
+    function displayMessage(message, isUser = false) {
+      const messageDiv = document.createElement('div');
+      messageDiv.classList.add(isUser ? 'user-message' : 'receptionist-message');
+      messageDiv.innerHTML = message;
+      conversationContainer.appendChild(messageDiv);
+      conversationContainer.scrollTop = conversationContainer.scrollHeight;
+    }
+
+    function processUserInput() {
+      const userResponse = userInput.value;
+      if (userResponse.trim() !== '') {
+        displayMessage(`You: ${userResponse}`, true);
+        handleReceptionistResponse(userResponse);
+        userInput.value = '';
+      }
+    }
+
+    function handleReceptionistResponse(userInput) {
+      const lowerCaseInput = userInput.toLowerCase();
+
+      if (lowerCaseInput.includes('check-in')) {
+        displayMessage("Receptionist: Great! Let's start the check-in process.");
+
+        setTimeout(() => {
+          displayMessage("Receptionist: First, could you provide your full name?");
+        }, 1000);
+      } else if (lowerCaseInput.includes('name')) {
+        displayMessage(`Receptionist: Nice to meet you, ${userInput}!`);
+        setTimeout(() => {
+          displayMessage("Receptionist: How many people will be staying with you?");
+        }, 1000);
+      } else if (lowerCaseInput.includes('people')) {
+        const numberOfPeople = parseInt(userInput);
+        if (!isNaN(numberOfPeople)) {
+          displayMessage(`Receptionist: Perfect! ${numberOfPeople} people. Do you have any special requests?`);
+          setTimeout(() => {
+            displayMessage("Receptionist: Please select one of the following options:<br>" +
+                           "<button onclick=\"selectOption('Wi-Fi')\">Wi-Fi</button>" +
+                           "<button onclick=\"selectOption('Breakfast')\">Breakfast</button>" +
+                           "<button onclick=\"selectOption('Parking')\">Parking</button>");
+          }, 1000);
+        } else {
+          displayMessage("Receptionist: I'm sorry, I didn't understand. Please provide a valid number.");
+          setTimeout(() => {
+            displayMessage("Receptionist: How many people will be staying with you?");
+          }, 1000);
+        }
+      } else {
+        displayMessage("Receptionist: I'm sorry, I didn't understand. Can you please provide more details?");
+      }
+    }
+
+    function selectOption(option) {
+      displayMessage(`You selected: ${option}`, true);
+      setTimeout(() => {
+        displayMessage("Receptionist: Thank you! Your check-in is almost complete. Your room details will be provided shortly.");
+        // Additional logic for completing the check-in process
+      }, 1000);
+    }
+
+    // Initial welcome message
+    displayMessage("Receptionist: Welcome to Danubius Hotel Regents Park! How may I assist you today?");
+  </script>
+
+</body>
+</html>
